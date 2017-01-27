@@ -51,8 +51,8 @@ class S3Bucket(object):
         return S3Key(self, key)
 
     def all(self):
-        """Returns all keys in """
-        return [S3Key(self, k) for k in self.list()]
+        """Returns all keys in the bucket."""
+        return [self.key(k) for k in self.list()]
 
     def get(self, key):
         k = self.key(key)
