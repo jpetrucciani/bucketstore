@@ -51,6 +51,8 @@ class S3Bucket(object):
                 if grant['Permission'] == 'READ':
                     return True
 
+        return False
+
     def make_public(self):
         """Makes the bucket public-readable."""
         return self._boto_bucket.Acl().put(ACL='public-read')
@@ -140,6 +142,8 @@ class S3Key(object):
                 if grant['Permission'] == 'READ':
                     return True
 
+        return False
+
     def make_public(self):
         """Sets the 'public-read' ACL for the key."""
         if not self.is_public:
@@ -161,7 +165,7 @@ class S3Key(object):
         if self.is_public:
             return '{0}/{1}/{2}'.format(self.bucket._boto_s3.meta.client.meta.endpoint_url, self.bucket.name, self.name)
         else:
-            return ValueError('{0!r} does not have the public-read ACL set. Use the make_public() method to allow for public URL sharing.')
+            return ValueError('{0!r} does not have the public-read ACL set. Use the make_public() method to allow for public URL sharing.'.format(self.name))
 
     def temp_url(self, duration=120):
         """Rerturns a temporary URL for the given key."""
