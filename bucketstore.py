@@ -1,7 +1,6 @@
 import os
 
-import boto3
-
+import boto
 
 def list():
     """Lists buckets, by name."""
@@ -11,9 +10,11 @@ def get(bucket_name, create=False):
     return S3Bucket(bucket_name, create=create)
 
 def login(access_key_id, secret_access_key):
-    # TODO: see if this works.
+    """Sets environment variables for boto3."""
     os.environ['AWS_ACCESS_KEY_ID'] = access_key_id
-    os.environ['AWS_SECRET_ACCESS_KEY'] = access_key_id
+    os.environ['AWS_SECRET_ACCESS_KEY'] = secret_access_key
+
+
 
 class S3Bucket(object):
     """An Amazon S3 Bucket."""
