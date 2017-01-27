@@ -43,6 +43,14 @@ class S3Bucket(object):
         """Returns a list of keys in the bucket."""
         return [k.key for k in self._boto_bucket.objects.all()]
 
+    @property
+    def is_public(self):
+        """Returns True if the public-read ACL is set for the bucket."""
+        for grant in self._boto_bucket.Acl().grants:
+            if 'AllUsers' in grant['Grantee'].get('URI', ''):
+                if grant['Permission'] == 'READ':
+                    return True
+
     def make_public(self):
         """Makes the bucket public-readable."""
         return self._boto_bucket.Acl().put(ACL='public-read')
@@ -126,6 +134,7 @@ class S3Key(object):
 
     @property
     def is_public(self):
+        """Returns True if the public-read ACL is set for the Key."""
         for grant in self._boto_object.Acl().grants:
             if 'AllUsers' in grant['Grantee'].get('URI', ''):
                 if grant['Permission'] == 'READ':
