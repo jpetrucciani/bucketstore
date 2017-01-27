@@ -39,7 +39,7 @@ setup(
     py_modules=['bucketstore'],
     install_requires=required,
     license='MIT',
-    classifiers= classifiers=[
+    classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
