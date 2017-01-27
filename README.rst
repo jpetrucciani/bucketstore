@@ -55,10 +55,14 @@ Usage
     >>> foo.temp_url(duration=1200)
     u'https://bucketstore-playground.s3.amazonaws.com/foo?AWSAccessKeyId=AKIAI2RVFNXIW7WS66QQ&Expires=1485493909&Signature=L3gD9avwQZQO1i11dIJXUiZ7Nx8%3D'
 
-    # Make publically accessable.
+    # Make key publically accessable.
     >>> foo.make_public()
     >>> foo.url
     'https://s3.amazonaws.com/bucketstore-playground/foo'
+
+    # Get / set metadata for key.
+    >>> foo.meta
+    {}
 
     >>> foo.delete()
 
