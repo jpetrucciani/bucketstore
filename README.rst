@@ -46,9 +46,8 @@ Usage
 
 ::
 
-    >>> bucket.all()[0]
+    >>> bucket.key('foo')
     <S3Key bucket='bucketstore-playground' name=u'foo'>
-    >>> foo = _
 
     >>> foo.set('new value')
 
