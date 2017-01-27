@@ -70,8 +70,9 @@ Interact with S3 keys:
     'https://s3.amazonaws.com/bucketstore-playground/foo'
 
     # Get / set metadata for key.
+    >>> foo.meta = {'foo': 'bar'}
     >>> foo.meta
-    {}
+    {'foo': 'bar}
 
     # Rename key to 'foo3'.
     >>> foo.rename('foo3')
