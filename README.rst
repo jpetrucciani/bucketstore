@@ -57,6 +57,7 @@ Interact with S3 keys:
     >>> bucket.key('foo')
     <S3Key bucket='bucketstore-playground' name=u'foo'>
 
+    >>> foo = _
     >>> foo.set('new value')
 
     # Generate a temporary share URL.
