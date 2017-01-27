@@ -35,24 +35,28 @@ class S3Bucket(object):
             else:
                 raise ValueError('The bucket {0!r} doesn\'t exist!'.format(self.name))
 
-        if not create:
-            pass
-        # Ensure exists, or create.
-
 
     def __getitem__(self, key):
-        # return self._boto_bucket.objects[key]
         return self.get(key)
+
+    def __setitem__(self, key, value):
+        return self.set(key, value)
 
     def list(self):
         """Returns a list of keys in the bucket."""
         return [k.key for k in self._boto_bucket.objects.all()]
 
     def make_public(self):
+        """Makes the bucket public-readable."""
         return self._boto_bucket.set_acl('public-read')
 
     def key(self, key):
+        """Returns a given key from the bucket."""
         return S3Key(self, key)
+
+    def all(self):
+        """Returns all keys in """
+        return [S3Key(self, k) for k in self.list()]
 
     def get(self, key):
         k = self.key(key)
