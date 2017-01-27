@@ -10,7 +10,7 @@ Features
 --------
 
 - Treats S3 Buckets as Key/Value stores.
-- Expects ``AWS_ACCESS_KEY_ID`` and ``AWS_SECRET_ACCESS_KEY`` to be set.
+- Automatic support for ``AWS_ACCESS_KEY_ID`` and ``AWS_SECRET_ACCESS_KEY`` environment variables.
 - Easily make keys (or entire buckets) publically accessable.
 - Easily get the public URL for a given key.
 - Generates temporary URLs for a given key.
