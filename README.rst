@@ -70,3 +70,12 @@ Interact with S3 keys::
     >>> foo.delete()
 
 Other methods include ``bucketstore.login(access_key_id, secret_access_key)``, ``bucketstore.list()``, and ``bucketstore.get(bucket_name, create=False)``.
+
+Installation
+------------
+
+::
+
+    $ pip install bucketstore
+
+✨🍰✨
