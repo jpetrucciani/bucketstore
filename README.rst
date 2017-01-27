@@ -18,7 +18,7 @@ Features
 Usage
 -----
 
-::
+Get (or create) a bucket, easily::
 
     import bucketstore
 
@@ -26,9 +26,8 @@ Usage
     bucket = bucketstore.get('bucketstore-playground', create=True)
 
 
-::
+Treat the bucket like a key/value store::
 
-    # Treat the bucket like a key/value store.
     >>> bucket['foo'] = 'bar'
     >>> bucket['foo']
     bar
@@ -44,7 +43,7 @@ Usage
     [<S3Key bucket='bucketstore-playground' name=u'foo'>, <S3Key bucket='bucketstore-playground' name=u'foo2'>]
 
 
-::
+Interact with S3 keys::
 
     >>> bucket.key('foo')
     <S3Key bucket='bucketstore-playground' name=u'foo'>
@@ -64,8 +63,10 @@ Usage
     >>> foo.meta
     {}
 
+    # Rename key to 'foo3'.
     >>> foo.rename('foo3')
 
+    # Delete the key.
     >>> foo.delete()
 
 Other methods include ``bucketstore.login(access_key_id, secret_access_key)``, ``bucketstore.list()``, and ``bucketstore.get(bucket_name, create=False)``.
