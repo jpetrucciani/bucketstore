@@ -100,7 +100,7 @@ class S3Key(object):
         self.name = name
 
     def __repr__(self):
-        return '<S3Key bucket={0!r} name={1!r}>'.format(self.bucket.name, self.name)
+        return '<S3Key name={0!r}> bucket={1!r}'.format(self.name, self.bucket.name)
 
     @property
     def _boto_key(self):
