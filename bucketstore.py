@@ -113,20 +113,28 @@ class S3Key(object):
         # Write the new object.
         self.bucket.set(new_name, self.get())
 
+        # Delete the current key.
+        self.delete()
+
         # Set the new name.
         self.name = new_name
 
-        # Delete the current key.
-        self.delete()
 
     def delete(self):
         """Deletes the key."""
         return self._boto_object.delete()
 
+    @property
+    def is_public(self):
+        for grant in self._boto_object.Acl().grants:
+            if 'AllUsers' in grant['Grantee'].get('URI', ''):
+                if grant['Permission'] == 'READ':
+                    return True
+
     def make_public(self):
         """Sets the 'public-read' ACL for the key."""
-        # TODO: Doesn't work.
-        return self._boto_object.Acl().put(ACL='public-read')
+        if not self.is_public:
+            return self._boto_object.Acl().put(ACL='public-read')
 
     @property
     def meta(self):
@@ -141,7 +149,10 @@ class S3Key(object):
     @property
     def url(self):
         """Returns the public URL for the given key."""
-        return '{0}/{1}/{2}'.format(self.bucket._boto_s3.meta.client.meta.endpoint_url, self.bucket.name, self.name)
+        if self.is_public:
+            return '{0}/{1}/{2}'.format(self.bucket._boto_s3.meta.client.meta.endpoint_url, self.bucket.name, self.name)
+        else:
+            return ValueError('{0!r} does not have the public-read ACL set. Use the make_public() method to allow for public URL sharing.')
 
     def temp_url(self, duration=120):
         """Rerturns a temporary URL for the given key."""
