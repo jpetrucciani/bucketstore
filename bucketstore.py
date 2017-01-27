@@ -117,4 +117,9 @@ class S3Key(object):
 
     @property
     def url(self):
+        """Returns the public URL for the given key."""
         return '{0}/{1}/{2}'.format(self.bucket._boto_s3.meta.client.meta.endpoint_url, self.bucket.name, self.name)
+
+    def temp_url(self, duration=120):
+        """Rerturns a temporary URL for the given key."""
+        return self.bucket._boto_s3.meta.client.generate_presigned_url('get_object', Params={'Bucket': self.bucket.name, 'Key': self.name}, ExpiresIn=duration)
