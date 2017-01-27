@@ -47,7 +47,7 @@ Treat the bucket like a key/value store:
     [u'foo', u'foo2']
 
     >>> bucket.all()
-    [<S3Key bucket='bucketstore-playground' name=u'foo'>, <S3Key bucket='bucketstore-playground' name=u'foo2'>]
+    [<S3Key name=u'foo' bucket='bucketstore-playground'>, <S3Key name=u'foo2' bucket='bucketstore-playground'>]
 
 
 Interact with S3 keys:
