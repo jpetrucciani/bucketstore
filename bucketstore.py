@@ -79,8 +79,9 @@ class S3Bucket(object):
         # Delete the whole bucket.
         if key is None:
             # Delete everything in the bucket.
-            for key in self._boto_bucket.objects.all():
+            for key in self.all():
                 key.delete()
+
             # Delete the bucket.
             self._boto_bucket.delete()
 
