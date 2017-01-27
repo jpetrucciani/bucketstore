@@ -63,6 +63,8 @@ class S3Bucket(object):
         return k.set(value)
 
     def delete(self, key=None):
+        """Deletes the given key, or the whole bucket."""
+
         # Delete the whole bucket.
         if key is None:
             # Delete everything in the bucket.
@@ -72,6 +74,8 @@ class S3Bucket(object):
             self._boto_bucket.delete()
 
         # If a key was passed, delete they key.
+        k = self.key(key)
+        return k.delete()
 
     def __repr__(self):
         return '<S3Bucket name={0!r}>'.format(self.name)
@@ -96,23 +100,30 @@ class S3Key(object):
         return self.bucket._boto_s3.Object(self.bucket.name, self.name)
 
     def get(self):
+        """Gets the value of the key."""
         return self._boto_object.get()['Body'].read()
 
     def set(self, value):
-        self._boto_key.put(Body=value)
+        """Sets the key to the given value."""
+        return self._boto_object.put(Body=value)
 
     def delete(self):
-        self._boto_key.delete()
+        """Deletes the key."""
+        return self._boto_object.delete()
 
     def make_public(self):
-        self.bucket._boto_bucket.lookup(self.name).set_acl('public-read')
+        """Sets the 'public-read' ACL for the key."""
+        # TODO: Doesn't work.
+        return self.bucket._boto_bucket.lookup(self.name).set_acl('public-read')
 
     @property
     def meta(self):
+        """Returns the metadata for the key."""
         return self.bucket._boto_s3.Object(self.bucket.name, self.name).get()['Metadata']
 
     @meta.setter
     def meta(self, value):
+        """Sets the metadata for the key."""
         self._boto_object.put(Metadata=value)
 
     @property
