@@ -1,0 +1,4 @@
+0.1.1
+ - Add support for key.rename(). 
+0.1.0
+- Initial release. 

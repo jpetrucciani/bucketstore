@@ -30,7 +30,7 @@ required = [
 
 setup(
     name='bucketstore',
-    version='0.1.0',
+    version='0.1.1',
     description='A simple library for interacting with Amazon S3.',
     long_description=long_description,
     author='Kenneth Reitz',
