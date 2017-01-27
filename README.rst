@@ -32,6 +32,9 @@ Treat the bucket like a key/value store:
 
 .. code-block:: pycon
 
+    >>> bucket
+    <S3Bucket name='bucketstore-playground'>
+
     >>> bucket['foo'] = 'bar'
     >>> bucket['foo']
     bar
