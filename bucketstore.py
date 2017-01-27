@@ -7,17 +7,13 @@ def list():
     """Lists buckets, by name."""
     return [b.name for b in s3.buckets.all()]
 
-def new(bucket_name):
-    """Creates a new bucket, and returns it."""
-    pass
-
 def get(bucket_name, create=False):
     return S3Bucket(bucket_name, create=create)
 
 def login(access_key_id, secret_access_key):
+    # TODO: see if this works.
     os.environ['AWS_ACCESS_KEY_ID'] = access_key_id
     os.environ['AWS_SECRET_ACCESS_KEY'] = access_key_id
-
 
 class S3Bucket(object):
     """An Amazon S3 Bucket."""
@@ -91,17 +87,33 @@ class S3Key(object):
     def __repr__(self):
         return '<S3Key bucket={0!r} name={1!r}>'.format(self.bucket.name, self.name)
 
+    @property
+    def _boto_key(self):
+        return self.bucket._boto_s3(self.bucket.name, self.name)
+
+    @property
+    def _boto_object(self):
+        return self.bucket._boto_s3.Object(self.bucket.name, self.name)
+
     def get(self):
-        return self.bucket._boto_s3.Object(self.bucket.name, self.name).get()['Body'].read()
+        return self._boto_object.get()['Body'].read()
 
     def set(self, value):
-        return self.bucket._boto_s3(self.bucket.name, self.name).put(Body=value)
+        self._boto_key.put(Body=value)
 
     def delete(self):
-        return self.bucket._boto_s3(self.bucket.name, self.name).delete()
+        self._boto_key.delete()
 
     def make_public(self):
         self.bucket._boto_bucket.lookup(self.name).set_acl('public-read')
+
+    @property
+    def meta(self):
+        return self.bucket._boto_s3.Object(self.bucket.name, self.name).get()['Metadata']
+
+    @meta.setter
+    def meta(self, value):
+        self._boto_object.put(Metadata=value)
 
     @property
     def url(self):
