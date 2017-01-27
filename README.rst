@@ -18,7 +18,9 @@ Features
 Usage
 -----
 
-Get (or create) a bucket, easily::
+Get (or create) a bucket, easily:
+
+.. code-block:: python
 
     import bucketstore
 
