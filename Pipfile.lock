@@ -1,0 +1,49 @@
+{
+    "default": {
+        "boto3": {
+            "version": "==1.4.4",
+            "hash": "sha256:5050c29353fec97301116386f469fa5858ccf47201623b53cf9f74e603bda52f"
+        },
+        "docutils": {
+            "version": "==0.13.1",
+            "hash": "sha256:de454f1015958450b72641165c08afe7023cd7e3944396448f2fb1b0ccba9d77"
+        },
+        "futures": {
+            "version": "==3.0.5",
+            "hash": "sha256:f7f16b6bf9653a918a03f1f2c2d62aac0cd64b1bc088e93ea279517f6b61120b"
+        },
+        "six": {
+            "version": "==1.10.0",
+            "hash": "sha256:0ff78c403d9bccf5a425a6d31a12aa6b47f1c21ca4dc2573a7e2f32a97335eb1"
+        },
+        "jmespath": {
+            "version": "==0.9.1",
+            "hash": "sha256:19942132a80f4bdeeb597f2027a48dc4dae3b99f407a8d5d7079d142c97c11b7"
+        },
+        "botocore": {
+            "version": "==1.5.7",
+            "hash": "sha256:d4899761be18537e4ba7d7a633a85d7e0e311248ec620dd69f01707f1f437075"
+        },
+        "python_dateutil": {
+            "version": "==2.6.0",
+            "hash": "sha256:537bf2a8f8ce6f6862ad705cd68f9e405c0b5db014aa40fa29eab4335d4b1716"
+        },
+        "s3transfer": {
+            "version": "==0.1.10",
+            "hash": "sha256:bc52f38637f37572ae180c08a2dd87a4825b46713797633aab6e1a42d6b2b8ff"
+        }
+    },
+    "develop": {},
+    "_meta": {
+        "sources": [
+            {
+                "url": "https://pypi.python.org/simple",
+                "verify_ssl": true
+            }
+        ],
+        "requires": {},
+        "hash": {
+            "sha256": "969829703b72aa3dfbcfc015fc2add7d727f1e4f22fc25581c73184846f645a7"
+        }
+    }
+}
