@@ -44,7 +44,7 @@ class S3Bucket(object):
 
     def make_public(self):
         """Makes the bucket public-readable."""
-        return self._boto_bucket.set_acl('public-read')
+        return self._boto_bucket.Acl().put(ACL='public-read')
 
     def key(self, key):
         """Returns a given key from the bucket."""
@@ -114,7 +114,7 @@ class S3Key(object):
     def make_public(self):
         """Sets the 'public-read' ACL for the key."""
         # TODO: Doesn't work.
-        return self.bucket._boto_bucket.lookup(self.name).set_acl('public-read')
+        return self._boto_object.Acl().put(ACL='public-read')
 
     @property
     def meta(self):
