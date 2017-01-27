@@ -107,6 +107,16 @@ class S3Key(object):
         """Sets the key to the given value."""
         return self._boto_object.put(Body=value)
 
+    def rename(self, new_name):
+        """Renames the key to a given new name."""
+        # Write the new object.
+        self.bucket.set(new_name, self.get())
+
+        # Set the new name.
+        self.name = new_name
+
+        self.delete()
+
     def delete(self):
         """Deletes the key."""
         return self._boto_object.delete()
