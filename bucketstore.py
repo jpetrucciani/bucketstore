@@ -3,8 +3,6 @@ import os
 import boto3
 
 
-
-
 def list():
     """Lists buckets, by name."""
     return [b.name for b in s3.buckets.all()]
@@ -13,8 +11,8 @@ def new(bucket_name):
     """Creates a new bucket, and returns it."""
     pass
 
-def get(bucket_name):
-    return S3Bucket(bucket_name)
+def get(bucket_name, create=False):
+    return S3Bucket(bucket_name, create=create)
 
 def login(access_key_id, secret_access_key):
     os.environ['AWS_ACCESS_KEY_ID'] = access_key_id
@@ -26,18 +24,21 @@ class S3Bucket(object):
     def __init__(self, name, create=False):
         super(S3Bucket, self).__init__()
         self.name = name
+        self._boto_s3 = boto3.resource('s3')
+        self._boto_bucket = self._boto_s3.Bucket(self.name)
+
+        # Check if the bucket exists.
+        if not self._boto_s3.Bucket(self.name) in self._boto_s3.buckets.all():
+            if create:
+                # Create the bucket.
+                self._boto_s3.create_bucket(Bucket=self.name)
+            else:
+                raise ValueError('The bucket {0!r} doesn\'t exist!'.format(self.name))
 
         if not create:
             pass
         # Ensure exists, or create.
 
-    @property
-    def _boto_s3(self):
-        return boto3.resource('s3')
-
-    @property
-    def _boto_bucket(self):
-        return self._boto_s3.Bucket(self.name)
 
     def __getitem__(self, key):
         # return self._boto_bucket.objects[key]
@@ -61,9 +62,16 @@ class S3Bucket(object):
         k = self.key(key)
         return k.set(value)
 
-    def delete(self, key):
-        #
-        pass
+    def delete(self, key=None):
+        # Delete the whole bucket.
+        if key is None:
+            # Delete everything in the bucket.
+            for key in self._boto_bucket.objects.all():
+                key.delete()
+            # Delete the bucket.
+            self._boto_bucket.delete()
+
+        # If a key was passed, delete they key.
 
     def __repr__(self):
         return '<S3Bucket name={0!r}>'.format(self.name)
