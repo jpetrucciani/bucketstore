@@ -1,6 +1,6 @@
 import os
 
-import boto
+import boto3
 
 def list():
     """Lists buckets, by name."""
