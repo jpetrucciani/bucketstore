@@ -115,6 +115,7 @@ class S3Key(object):
         # Set the new name.
         self.name = new_name
 
+        # Delete the current key.
         self.delete()
 
     def delete(self):
