@@ -26,7 +26,9 @@ Get (or create) a bucket, easily::
     bucket = bucketstore.get('bucketstore-playground', create=True)
 
 
-Treat the bucket like a key/value store::
+Treat the bucket like a key/value store:
+
+.. code-block:: pycon
 
     >>> bucket['foo'] = 'bar'
     >>> bucket['foo']
@@ -43,7 +45,9 @@ Treat the bucket like a key/value store::
     [<S3Key bucket='bucketstore-playground' name=u'foo'>, <S3Key bucket='bucketstore-playground' name=u'foo2'>]
 
 
-Interact with S3 keys::
+Interact with S3 keys:
+
+.. code-block:: pycon
 
     >>> bucket.key('foo')
     <S3Key bucket='bucketstore-playground' name=u'foo'>
