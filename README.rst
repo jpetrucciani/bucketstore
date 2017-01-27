@@ -65,5 +65,7 @@ Usage
     >>> foo.meta
     {}
 
+    >>> foo.rename('foo3')
+
     >>> foo.delete()
 
