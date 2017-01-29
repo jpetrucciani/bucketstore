@@ -2,12 +2,15 @@ import os
 
 import boto3
 
+
 def list():
     """Lists buckets, by name."""
     return [b.name for b in s3.buckets.all()]
 
+
 def get(bucket_name, create=False):
     return S3Bucket(bucket_name, create=create)
+
 
 def login(access_key_id, secret_access_key):
     """Sets environment variables for boto3."""
@@ -15,9 +18,9 @@ def login(access_key_id, secret_access_key):
     os.environ['AWS_SECRET_ACCESS_KEY'] = secret_access_key
 
 
-
 class S3Bucket(object):
     """An Amazon S3 Bucket."""
+
     def __init__(self, name, create=False):
         super(S3Bucket, self).__init__()
         self.name = name
@@ -30,8 +33,8 @@ class S3Bucket(object):
                 # Create the bucket.
                 self._boto_s3.create_bucket(Bucket=self.name)
             else:
-                raise ValueError('The bucket {0!r} doesn\'t exist!'.format(self.name))
-
+                raise ValueError(
+                    'The bucket {0!r} doesn\'t exist!'.format(self.name))
 
     def __getitem__(self, key):
         return self.get(key)
@@ -95,6 +98,7 @@ class S3Bucket(object):
 
 class S3Key(object):
     """An Amazon S3 Key"""
+
     def __init__(self, bucket, name):
         super(S3Key, self).__init__()
         self.bucket = bucket
@@ -129,7 +133,6 @@ class S3Key(object):
 
         # Set the new name.
         self.name = new_name
-
 
     def delete(self):
         """Deletes the key."""
