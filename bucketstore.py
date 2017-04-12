@@ -5,6 +5,7 @@ import boto3
 
 def list():
     """Lists buckets, by name."""
+    s3 = boto3.resource('s3')
     return [b.name for b in s3.buckets.all()]
 
 
