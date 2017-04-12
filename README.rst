@@ -80,6 +80,10 @@ Interact with S3 keys:
     # Delete the key.
     >>> foo.delete()
 
+    # Create a key with metadata at the same time.
+    >>> foo = bucket.key('foo.html')
+    >>> foo.set('<h1>bar</h1>', {'content_type': 'text/html'})
+
 Other methods include ``bucketstore.login(access_key_id, secret_access_key)``, ``bucketstore.list()``, and ``bucketstore.get(bucket_name, create=False)``.
 
 Installation
