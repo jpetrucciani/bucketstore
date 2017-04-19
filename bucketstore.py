@@ -5,6 +5,7 @@ import boto3
 
 def list():
     """Lists buckets, by name."""
+    s3 = boto3.resource('s3')
     return [b.name for b in s3.buckets.all()]
 
 
@@ -72,9 +73,9 @@ class S3Bucket(object):
         k = self.key(key)
         return k.get()
 
-    def set(self, key, value):
+    def set(self, key, value, metadata=dict()):
         k = self.key(key)
-        return k.set(value)
+        return k.set(value, metadata)
 
     def delete(self, key=None):
         """Deletes the given key, or the whole bucket."""
@@ -119,14 +120,14 @@ class S3Key(object):
         """Gets the value of the key."""
         return self._boto_object.get()['Body'].read()
 
-    def set(self, value):
+    def set(self, value, metadata=dict()):
         """Sets the key to the given value."""
-        return self._boto_object.put(Body=value)
+        return self._boto_object.put(Body=value, Metadata=metadata)
 
     def rename(self, new_name):
         """Renames the key to a given new name."""
         # Write the new object.
-        self.bucket.set(new_name, self.get())
+        self.bucket.set(new_name, self.get(), self.meta)
 
         # Delete the current key.
         self.delete()
@@ -161,7 +162,7 @@ class S3Key(object):
     @meta.setter
     def meta(self, value):
         """Sets the metadata for the key."""
-        self._boto_object.put(Metadata=value)
+        self.set(self.get(), value)
 
     @property
     def url(self):
@@ -172,5 +173,5 @@ class S3Key(object):
             return ValueError('{0!r} does not have the public-read ACL set. Use the make_public() method to allow for public URL sharing.'.format(self.name))
 
     def temp_url(self, duration=120):
-        """Rerturns a temporary URL for the given key."""
+        """Returns a temporary URL for the given key."""
         return self.bucket._boto_s3.meta.client.generate_presigned_url('get_object', Params={'Bucket': self.bucket.name, 'Key': self.name}, ExpiresIn=duration)
