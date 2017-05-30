@@ -86,6 +86,22 @@ Interact with S3 keys:
 
 Other methods include ``bucketstore.login(access_key_id, secret_access_key)``, ``bucketstore.list()``, and ``bucketstore.get(bucket_name, create=False)``.
 
+Tests
+-----
+
+Tests are run through Tox_.
+
+.. code-block:: shell
+
+    # Run tests against all environments.
+    $ tox
+    # Run against a specific version.
+    $ tox -e py35
+    # Run with pytest arguments.
+    $ tox -- --pdb
+
+.. _Tox: https://tox.readthedocs.io/en/latest/
+
 Installation
 ------------
 

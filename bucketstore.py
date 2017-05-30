@@ -35,7 +35,7 @@ class S3Bucket(object):
                 self._boto_s3.create_bucket(Bucket=self.name)
             else:
                 raise ValueError(
-                    'The bucket {0!r} doesn\'t exist!'.format(self.name))
+                    "The bucket {0!r} doesn't exist!".format(self.name))
 
     def __getitem__(self, key):
         return self.get(key)
@@ -87,7 +87,7 @@ class S3Bucket(object):
                 key.delete()
 
             # Delete the bucket.
-            self._boto_bucket.delete()
+            return self._boto_bucket.delete()
 
         # If a key was passed, delete they key.
         k = self.key(key)
@@ -106,11 +106,10 @@ class S3Key(object):
         self.name = name
 
     def __repr__(self):
-        return '<S3Key name={0!r}> bucket={1!r}'.format(self.name, self.bucket.name)
-
-    @property
-    def _boto_key(self):
-        return self.bucket._boto_s3(self.bucket.name, self.name)
+        return '<S3Key name={0!r} bucket={1!r}>'.format(
+            self.name,
+            self.bucket.name
+        )
 
     @property
     def _boto_object(self):
@@ -157,7 +156,7 @@ class S3Key(object):
     @property
     def meta(self):
         """Returns the metadata for the key."""
-        return self.bucket._boto_s3.Object(self.bucket.name, self.name).get()['Metadata']
+        return self._boto_object.get()['Metadata']
 
     @meta.setter
     def meta(self, value):
@@ -168,10 +167,20 @@ class S3Key(object):
     def url(self):
         """Returns the public URL for the given key."""
         if self.is_public:
-            return '{0}/{1}/{2}'.format(self.bucket._boto_s3.meta.client.meta.endpoint_url, self.bucket.name, self.name)
+            return '{0}/{1}/{2}'.format(
+                self.bucket._boto_s3.meta.client.meta.endpoint_url,
+                self.bucket.name,
+                self.name
+            )
         else:
-            return ValueError('{0!r} does not have the public-read ACL set. Use the make_public() method to allow for public URL sharing.'.format(self.name))
+            raise ValueError('{0!r} does not have the public-read ACL set. '
+                             'Use the make_public() method to allow for '
+                             'public URL sharing.'.format(self.name))
 
     def temp_url(self, duration=120):
         """Returns a temporary URL for the given key."""
-        return self.bucket._boto_s3.meta.client.generate_presigned_url('get_object', Params={'Bucket': self.bucket.name, 'Key': self.name}, ExpiresIn=duration)
+        return self.bucket._boto_s3.meta.client.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': self.bucket.name, 'Key': self.name},
+            ExpiresIn=duration
+        )
