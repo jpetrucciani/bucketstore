@@ -1,7 +1,12 @@
 import bucketstore
+import os
 import pytest
 from moto import mock_s3
 from typing import Generator
+
+
+# this is to attempt to hack our way around boto issues
+os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
 
 
 @pytest.fixture(autouse=True)
