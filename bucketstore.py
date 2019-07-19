@@ -3,6 +3,7 @@ bucketstore module
 """
 import os
 import boto3
+import botocore
 from typing import List
 
 
@@ -130,6 +131,23 @@ class S3Bucket(object):
     def __setitem__(self, key: str, value: str) -> dict:
         """allows for setting/uploading keys with the array syntax"""
         return self.set(key, value)
+
+    def __delitem__(self, key: str) -> dict:
+        """allow for deletion of keys via the del operator"""
+        return self.delete(key)
+
+    def __contains__(self, item: str) -> bool:
+        """allows for use of the in keyword on the bucket object"""
+        try:
+            self._boto_s3.Object(self.name, item).load()
+            return True
+        except botocore.exceptions.ClientError as e:
+            if e.response["Error"]["Code"] == "404":
+                # The object does not exist.
+                return False
+            else:
+                # Something else has gone wrong.
+                raise
 
     def list(self) -> List:
         """returns a list of keys in the bucket."""

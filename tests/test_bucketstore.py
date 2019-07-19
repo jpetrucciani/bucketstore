@@ -12,6 +12,7 @@ def test_login():
     """
     assert os.environ["AWS_ACCESS_KEY_ID"] == "access_key"
     assert os.environ["AWS_SECRET_ACCESS_KEY"] == "secret_key"
+    assert os.environ["AWS_DEFAULT_REGION"] == "us-east-1"
 
 
 @mock_s3
@@ -109,7 +110,7 @@ def test_keys_have_metadata(key):
     assert key.meta == metadata
 
 
-def test_keys_have_a_cool_repr(key) -> None:
+def test_keys_have_a_cool_repr(key):
     # The textual representation of the class is nifty, so test it.
     rep = repr(key)
     assert "S3Key" in rep
@@ -117,7 +118,7 @@ def test_keys_have_a_cool_repr(key) -> None:
     assert key.bucket.name in rep
 
 
-def test_private_methods(key) -> None:
+def test_private_methods(key):
     # This method contains boto internals, so as long as it returns a truthy
     # value, it is good.
     assert key._boto_object
@@ -133,3 +134,22 @@ def test_bucket_keys_can_be_iterated_upon(bucket):
 
     for idx, key in enumerate(keys):
         assert key.name == str(idx)
+
+
+def test_bucket_in_operator(bucket):
+    """test that we can use the in operator on a bucket"""
+    for idx in range(10):
+        bucket[str(idx)] = str(idx)
+
+    assert "0" in bucket
+    assert "10" not in bucket
+
+
+def test_bucket_del_operator(bucket):
+    """test that we can use the del operator on a bucket + key"""
+    for idx in range(10):
+        bucket[str(idx)] = str(idx)
+
+    assert "0" in bucket
+    del bucket["0"]
+    assert "0" not in bucket

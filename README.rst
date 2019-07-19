@@ -33,11 +33,20 @@ Features
 - Easily make keys (or entire buckets) publically accessable.
 - Easily get the public URL for a given key.
 - Generates temporary URLs for a given key.
+- Use S3 in a pythonic way!
 
 Usage
 -----
 
+Installation
+^^^^^^^^^^^^
+
+::
+
+    $ pip install bucketstore
+
 Get (or create) a bucket, easily:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -48,28 +57,42 @@ Get (or create) a bucket, easily:
 
 
 Treat the bucket like a key/value store:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: pycon
 
     >>> bucket
     <S3Bucket name='bucketstore-playground'>
 
+    # get/set using array syntax
     >>> bucket['foo'] = 'bar'
     >>> bucket['foo']
     bar
 
+    # get/set using methods
     >>> bucket.set('foo2', 'bar2')
     >>> bucket.get('foo2')
     bar2
 
+    # list keys
     >>> bucket.list()
     [u'foo', u'foo2']
 
+    # all keys
     >>> bucket.all()
     [<S3Key name=u'foo' bucket='bucketstore-playground'>, <S3Key name=u'foo2' bucket='bucketstore-playground'>]
 
+    # check if a key exists in the bucket
+    >>> 'foo' in bucket
+    True
+
+    # delete keys in the bucket
+    >>> del bucket['foo2']
+    {}
+
 
 Interact with S3 keys:
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: pycon
 
@@ -121,11 +144,5 @@ Tests are run through Tox_.
 
 .. _Tox: https://tox.readthedocs.io/en/latest/
 
-Installation
-------------
-
-::
-
-    $ pip install bucketstore
 
 ✨🍰✨
