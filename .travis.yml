@@ -15,3 +15,12 @@ install:
   - pip install tox pipenv
   - pipenv install
 script: tox
+deploy:
+  provider: pypi
+  user: jacobi
+  skip_existing: true
+  on:
+    branch: master
+    tags: true
+  password:
+    secure: rFD6hxrnXtFP9OQNbFiXXtObK6w+cYQVOtw0P8FBrkn3p66iI4Vu+Q0owmp5dI+ZT4v1SZB0KQZTK6brX+CbLPEjWdScwae/7Ru95bWDGdQLFanVYSf0PULE7Py3JU/+eMBoauAZxOIzY0BnQ94Z+Vx8KKed/4RsEh1gSsm9y4mmBKVh1omp7oTuk0BK8H4LIw3lICvLJtIfvnxqBJ21c+2Vl40ZGxp3T2NxBK1xWj0zwyRjawb+9yT2kXmwvYAiPsv0HLS1cZEAlYlR8VmPbkr0mQ3o+nP7zcoBwoAjME1erc0p/V64+Lu3FEC8mDt+V+CnxO8YdrbrmFP+wlM0ihVv5qu61KU8nt86LzOEAWJ5ADUlaDTyLdBTsSh4w1nyzKPh3/H4fOn69CP/vc9x4rPcCShltaApwwZKLZXU4lBhQPeNZZZtUX+pICy0FotoOljhDLVZAMoKmEO0aMmJ0eLJsp0iMYPZlS5hiwJsRrS1HhVe2TwJsIsg6QAJsJVByt14tHGopGvLxDwzbY9HT3c7Wt422JN0ylZeJKeisL6bNb7B0I6OKLNEu9QnNKmrPyRhAdUP0LCYIUhknj8v9e0cORltrAlvrZ2nxzAlTWdY0uMlG3r7lN9htiOoTRs+RYpauy5Rso/hf8LoGRm9aOGO5fWMPU3J+ngGEaO71+8=
