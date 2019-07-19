@@ -1,3 +1,7 @@
+0.2.0
+ - removing older and EOL python versions
+ - adding type annotations
+ - fixing tests
 0.1.2
  - General improvements. 
  - key/bucket.is_public boolean. 

@@ -8,15 +8,8 @@ import sys
 import codecs
 from setuptools import setup
 
-try:
-    # Python 3
-    from os import dirname
-except ImportError:
-    # Python 2
-    from os.path import dirname
 
-
-CURRENT_DIRECTORY = os.path.abspath(dirname(__file__))
+CURRENT_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 
 with codecs.open(os.path.join(CURRENT_DIRECTORY, "README.rst"), encoding="utf-8") as f:
     LONG_DESCRIPTION = "\n" + f.read()
@@ -41,7 +34,6 @@ setup(
     license="MIT",
     classifiers=[
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
