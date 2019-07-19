@@ -6,6 +6,9 @@ import boto3
 from typing import List
 
 
+AWS_DEFAULT_REGION = "us-east-1"
+
+
 class S3Key(object):
     """An Amazon S3 Key"""
 
@@ -105,10 +108,11 @@ class S3Key(object):
 class S3Bucket(object):
     """An Amazon S3 Bucket."""
 
-    def __init__(self, name: str, create: bool = False) -> None:
+    def __init__(self, name: str, create: bool = False, region: str = "") -> None:
         super(S3Bucket, self).__init__()
         self.name = name
-        self._boto_s3 = boto3.resource("s3")
+        self.region = region or os.getenv("AWS_DEFAULT_REGION", AWS_DEFAULT_REGION)
+        self._boto_s3 = boto3.resource("s3", self.region)
         self._boto_bucket = self._boto_s3.Bucket(self.name)
 
         # Check if the bucket exists.
@@ -199,7 +203,10 @@ def get(bucket_name: str, create: bool = False) -> S3Bucket:
     return S3Bucket(bucket_name, create=create)
 
 
-def login(access_key_id: str, secret_access_key: str) -> None:
+def login(
+    access_key_id: str, secret_access_key: str, region: str = AWS_DEFAULT_REGION
+) -> None:
     """sets environment variables for boto3."""
     os.environ["AWS_ACCESS_KEY_ID"] = access_key_id
     os.environ["AWS_SECRET_ACCESS_KEY"] = secret_access_key
+    os.environ["AWS_DEFAULT_REGION"] = region
