@@ -1,129 +1,42 @@
+"""
+bucketstore module
+"""
 import os
-
 import boto3
-
-
-def list():
-    """Lists buckets, by name."""
-    s3 = boto3.resource('s3')
-    return [b.name for b in s3.buckets.all()]
-
-
-def get(bucket_name, create=False):
-    return S3Bucket(bucket_name, create=create)
-
-
-def login(access_key_id, secret_access_key):
-    """Sets environment variables for boto3."""
-    os.environ['AWS_ACCESS_KEY_ID'] = access_key_id
-    os.environ['AWS_SECRET_ACCESS_KEY'] = secret_access_key
-
-
-class S3Bucket(object):
-    """An Amazon S3 Bucket."""
-
-    def __init__(self, name, create=False):
-        super(S3Bucket, self).__init__()
-        self.name = name
-        self._boto_s3 = boto3.resource('s3')
-        self._boto_bucket = self._boto_s3.Bucket(self.name)
-
-        # Check if the bucket exists.
-        if not self._boto_s3.Bucket(self.name) in self._boto_s3.buckets.all():
-            if create:
-                # Create the bucket.
-                self._boto_s3.create_bucket(Bucket=self.name)
-            else:
-                raise ValueError(
-                    "The bucket {0!r} doesn't exist!".format(self.name))
-
-    def __getitem__(self, key):
-        return self.get(key)
-
-    def __setitem__(self, key, value):
-        return self.set(key, value)
-
-    def list(self):
-        """Returns a list of keys in the bucket."""
-        return [k.key for k in self._boto_bucket.objects.all()]
-
-    @property
-    def is_public(self):
-        """Returns True if the public-read ACL is set for the bucket."""
-        for grant in self._boto_bucket.Acl().grants:
-            if 'AllUsers' in grant['Grantee'].get('URI', ''):
-                if grant['Permission'] == 'READ':
-                    return True
-
-        return False
-
-    def make_public(self):
-        """Makes the bucket public-readable."""
-        return self._boto_bucket.Acl().put(ACL='public-read')
-
-    def key(self, key):
-        """Returns a given key from the bucket."""
-        return S3Key(self, key)
-
-    def all(self):
-        """Returns all keys in the bucket."""
-        return [self.key(k) for k in self.list()]
-
-    def get(self, key):
-        k = self.key(key)
-        return k.get()
-
-    def set(self, key, value, metadata=dict(), content_type=None):
-        k = self.key(key)
-        return k.set(value, metadata, content_type)
-
-    def delete(self, key=None):
-        """Deletes the given key, or the whole bucket."""
-
-        # Delete the whole bucket.
-        if key is None:
-            # Delete everything in the bucket.
-            for key in self.all():
-                key.delete()
-
-            # Delete the bucket.
-            return self._boto_bucket.delete()
-
-        # If a key was passed, delete they key.
-        k = self.key(key)
-        return k.delete()
-
-    def __repr__(self):
-        return '<S3Bucket name={0!r}>'.format(self.name)
+from typing import List
 
 
 class S3Key(object):
     """An Amazon S3 Key"""
 
-    def __init__(self, bucket, name):
+    def __init__(self, bucket: "S3Bucket", name: str) -> None:
+        """constructor"""
         super(S3Key, self).__init__()
         self.bucket = bucket
         self.name = name
 
-    def __repr__(self):
-        return '<S3Key name={0!r} bucket={1!r}>'.format(
-            self.name,
-            self.bucket.name
-        )
+    def __repr__(self) -> str:
+        """str representation of an s3key"""
+        return "<S3Key name={0!r} bucket={1!r}>".format(self.name, self.bucket.name)
 
     @property
-    def _boto_object(self):
+    def _boto_object(self):  # type: ignore
+        """the underlying boto3 s3 key object"""
         return self.bucket._boto_s3.Object(self.bucket.name, self.name)
 
-    def get(self):
+    def get(self) -> str:
         """Gets the value of the key."""
-        return self._boto_object.get()['Body'].read()
+        return self._boto_object.get()["Body"].read()
 
-    def set(self, value, metadata=dict(), content_type=None):
+    def set(self, value: str, metadata: dict = None, content_type: str = "") -> dict:
         """Sets the key to the given value."""
-        return self._boto_object.put(Body=value, Metadata=metadata, ContentType=content_type)
+        if not metadata:
+            metadata = {}
+        return self._boto_object.put(
+            Body=value, Metadata=metadata, ContentType=content_type
+        )
 
-    def rename(self, new_name):
+    def rename(self, new_name: str) -> None:
         """Renames the key to a given new name."""
         # Write the new object.
         self.bucket.set(new_name, self.get(), self.meta)
@@ -134,53 +47,159 @@ class S3Key(object):
         # Set the new name.
         self.name = new_name
 
-    def delete(self):
+    def delete(self,) -> dict:
         """Deletes the key."""
         return self._boto_object.delete()
 
     @property
-    def is_public(self):
-        """Returns True if the public-read ACL is set for the Key."""
+    def is_public(self) -> bool:
+        """returns True if the public-read ACL is set for the Key."""
         for grant in self._boto_object.Acl().grants:
-            if 'AllUsers' in grant['Grantee'].get('URI', ''):
-                if grant['Permission'] == 'READ':
+            if "AllUsers" in grant["Grantee"].get("URI", ""):
+                if grant["Permission"] == "READ":
                     return True
 
         return False
 
-    def make_public(self):
-        """Sets the 'public-read' ACL for the key."""
+    def make_public(self) -> dict:
+        """sets the 'public-read' ACL for the key."""
         if not self.is_public:
-            return self._boto_object.Acl().put(ACL='public-read')
+            return self._boto_object.Acl().put(ACL="public-read")
+        return {}
 
     @property
-    def meta(self):
-        """Returns the metadata for the key."""
-        return self._boto_object.get()['Metadata']
+    def meta(self) -> dict:
+        """returns the metadata for the key."""
+        return self._boto_object.get()["Metadata"]
 
     @meta.setter
-    def meta(self, value):
-        """Sets the metadata for the key."""
+    def meta(self, value: dict) -> None:
+        """sets the metadata for the key."""
         self.set(self.get(), value)
 
     @property
-    def url(self):
-        """Returns the public URL for the given key."""
+    def url(self) -> str:
+        """returns the public URL for the given key."""
         if self.is_public:
-            return '{0}/{1}/{2}'.format(
+            return "{0}/{1}/{2}".format(
                 self.bucket._boto_s3.meta.client.meta.endpoint_url,
                 self.bucket.name,
-                self.name
+                self.name,
             )
         else:
-            raise ValueError('{0!r} does not have the public-read ACL set. '
-                             'Use the make_public() method to allow for '
-                             'public URL sharing.'.format(self.name))
+            raise ValueError(
+                "{0!r} does not have the public-read ACL set. "
+                "Use the make_public() method to allow for "
+                "public URL sharing.".format(self.name)
+            )
 
-    def temp_url(self, duration=120):
-        """Returns a temporary URL for the given key."""
+    def temp_url(self, duration: int = 120) -> str:
+        """returns a temporary URL for the given key."""
         return self.bucket._boto_s3.meta.client.generate_presigned_url(
-            'get_object',
-            Params={'Bucket': self.bucket.name, 'Key': self.name},
-            ExpiresIn=duration
+            "get_object",
+            Params={"Bucket": self.bucket.name, "Key": self.name},
+            ExpiresIn=duration,
         )
+
+
+class S3Bucket(object):
+    """An Amazon S3 Bucket."""
+
+    def __init__(self, name: str, create: bool = False) -> None:
+        super(S3Bucket, self).__init__()
+        self.name = name
+        self._boto_s3 = boto3.resource("s3")
+        self._boto_bucket = self._boto_s3.Bucket(self.name)
+
+        # Check if the bucket exists.
+        if not self._boto_s3.Bucket(self.name) in self._boto_s3.buckets.all():
+            if create:
+                # Create the bucket.
+                self._boto_s3.create_bucket(Bucket=self.name)
+            else:
+                raise ValueError("The bucket {0!r} doesn't exist!".format(self.name))
+
+    def __getitem__(self, key: str) -> str:
+        """allows for accessing keys with the array syntax"""
+        return self.get(key)
+
+    def __setitem__(self, key: str, value: str) -> dict:
+        """allows for setting/uploading keys with the array syntax"""
+        return self.set(key, value)
+
+    def list(self) -> List:
+        """returns a list of keys in the bucket."""
+        return [k.key for k in self._boto_bucket.objects.all()]
+
+    @property
+    def is_public(self) -> bool:
+        """returns True if the public-read ACL is set for the bucket."""
+        for grant in self._boto_bucket.Acl().grants:
+            if "AllUsers" in grant["Grantee"].get("URI", ""):
+                if grant["Permission"] == "READ":
+                    return True
+
+        return False
+
+    def make_public(self) -> dict:
+        """Makes the bucket public-readable."""
+        return self._boto_bucket.Acl().put(ACL="public-read")
+
+    def key(self, key: str) -> S3Key:
+        """returns a given key from the bucket."""
+        return S3Key(self, key)
+
+    def all(self) -> List[S3Key]:
+        """returns all keys in the bucket."""
+        return [self.key(k) for k in self.list()]
+
+    def get(self, key: str) -> str:
+        """get the contents of the given key"""
+        selected_key = self.key(key)
+        return selected_key.get()
+
+    def set(
+        self, key: str, value: str, metadata: dict = None, content_type: str = ""
+    ) -> dict:
+        """creates/edits a key in the s3 bucket"""
+        if not metadata:
+            metadata = {}
+        new_key = self.key(key)
+        return new_key.set(value, metadata, content_type)
+
+    def delete(self, key: str = None) -> dict:
+        """Deletes the given key, or the whole bucket."""
+
+        # Delete the whole bucket.
+        if key is None:
+            # Delete everything in the bucket.
+            for each_key in self.all():
+                each_key.delete()
+
+            # Delete the bucket.
+            return self._boto_bucket.delete()
+
+        # If a key was passed, delete they key.
+        k = self.key(key)
+        return k.delete()
+
+    def __repr__(self) -> str:
+        """representation of an s3bucket object"""
+        return "<S3Bucket name={0!r}>".format(self.name)
+
+
+def list() -> List[str]:
+    """lists buckets, by name."""
+    s3_resource = boto3.resource("s3")
+    return [bucket.name for bucket in s3_resource.buckets.all()]
+
+
+def get(bucket_name: str, create: bool = False) -> S3Bucket:
+    """get an s3bucket object by name"""
+    return S3Bucket(bucket_name, create=create)
+
+
+def login(access_key_id: str, secret_access_key: str) -> None:
+    """sets environment variables for boto3."""
+    os.environ["AWS_ACCESS_KEY_ID"] = access_key_id
+    os.environ["AWS_SECRET_ACCESS_KEY"] = secret_access_key

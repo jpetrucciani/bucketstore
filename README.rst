@@ -1,6 +1,10 @@
 BucketStore: A simple Amazon S3 Client, for Python.
 ===================================================
 
+.. image:: https://travis-ci.org/jpetrucciani/bucketstore.svg?branch=master
+    :target: https://travis-ci.org/jpetrucciani/bucketstore
+
+
 **BucketStore** is a very simple Amazon S3 client, written in Python. It
 aims to be much more straight-forward to use than boto3, and specializes
 only in Amazon S3, ignoring the rest of the AWS ecosystem.

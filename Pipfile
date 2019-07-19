@@ -4,3 +4,8 @@ verify_ssl = true
 
 [packages]
 boto3 = "*"
+
+[dev-packages]
+tox = "*"
+moto = "*"
+pytest = "*"

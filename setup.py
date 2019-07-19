@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+"""
+pip setup file
+"""
 import os
 import sys
 import codecs
-
 from setuptools import setup
 
 try:
@@ -14,41 +15,38 @@ except ImportError:
     # Python 2
     from os.path import dirname
 
-here = os.path.abspath(dirname(__file__))
 
-with codecs.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
-    long_description = '\n' + f.read()
+CURRENT_DIRECTORY = os.path.abspath(dirname(__file__))
+
+with codecs.open(os.path.join(CURRENT_DIRECTORY, "README.rst"), encoding="utf-8") as f:
+    LONG_DESCRIPTION = "\n" + f.read()
 
 
 if sys.argv[-1] == "publish":
     os.system("python setup.py sdist bdist_wheel upload")
     sys.exit()
 
-required = [
-    'boto3',
-]
+REQUIRED = ["boto3"]
 
 setup(
-    name='bucketstore',
-    version='0.1.2',
-    description='A simple library for interacting with Amazon S3.',
-    long_description=long_description,
-    author='Kenneth Reitz',
-    author_email='me@kennethreitz.com',
-    url='https://github.com/kennethreitz/bucketstore',
-    py_modules=['bucketstore'],
-    install_requires=required,
-    license='MIT',
+    name="bucketstore",
+    version="0.2.0",
+    description="A simple library for interacting with Amazon S3.",
+    long_description=LONG_DESCRIPTION,
+    author="Kenneth Reitz, Jacobi Petrucciani",
+    author_email="jacobi@mimirhq.com",
+    url="https://github.com/jpetrucciani/bucketstore",
+    py_modules=["bucketstore"],
+    install_requires=REQUIRED,
+    license="MIT",
     classifiers=[
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy'
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: Implementation :: CPython",
+        "Programming Language :: Python :: Implementation :: PyPy",
     ],
 )
