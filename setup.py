@@ -4,7 +4,6 @@
 pip setup file
 """
 import os
-import sys
 import codecs
 from setuptools import setup
 
@@ -14,10 +13,6 @@ CURRENT_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(CURRENT_DIRECTORY, "README.rst"), encoding="utf-8") as f:
     LONG_DESCRIPTION = "\n" + f.read()
 
-
-if sys.argv[-1] == "publish":
-    os.system("python setup.py sdist bdist_wheel upload")
-    sys.exit()
 
 REQUIRED = ["boto3"]
 
