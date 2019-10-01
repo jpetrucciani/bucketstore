@@ -18,7 +18,7 @@ REQUIRED = ["boto3"]
 
 setup(
     name="bucketstore",
-    version="0.2.0",
+    version="0.2.1",
     description="A simple library for interacting with Amazon S3.",
     long_description=LONG_DESCRIPTION,
     author="Kenneth Reitz, Jacobi Petrucciani",

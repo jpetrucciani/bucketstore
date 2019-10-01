@@ -124,7 +124,25 @@ Interact with S3 keys:
 
     # Create a key with metadata at the same time.
     >>> foo = bucket.key('foo.html')
-    >>> foo.set('<h1>bar</h1>', {'content_type': 'text/html'})
+    >>> foo.set('<h1>bar</h1>', content_type='text/html')
+
+    # upload to key
+    >>> bucket.key('test.py').upload('/tmp/test.py')
+    # or with a file-like object! (make sure it's open in binary mode)
+    >>> with open('/tmp/test.py', 'rb') as file:
+    >>>     bucket.key('test.py').upload(file)
+
+    # download to key
+    >>> bucket.key('test.py').download('/tmp/test.py')
+    # or with a file-like object! (make sure it's open in binary mode)
+    >>> with open('/tmp/test.py', 'wb') as file:
+    >>>     bucket.key('test.py').download(file)
+
+    # size of key
+    >>> bucket.key('test.py').size()
+    >>> len(bucket.key('test.py'))
+    15
+
 
 Other methods include ``bucketstore.login(access_key_id, secret_access_key)``, ``bucketstore.list()``, and ``bucketstore.get(bucket_name, create=False)``.
 
