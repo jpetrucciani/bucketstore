@@ -10,6 +10,8 @@ from typing import Generator
 
 # this is to attempt to hack our way around boto issues
 os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
+os.environ["AWS_SECURITY_TOKEN"] = "testing"
+os.environ["AWS_SESSION_TOKEN"] = "testing"
 
 
 @pytest.fixture(autouse=True)

@@ -243,7 +243,7 @@ class S3Bucket:
         return "<S3Bucket name={0!r}>".format(self.name)
 
 
-def list() -> List[str]:
+def list() -> List[str]:  # pylint: disable=redefined-builtin
     """lists buckets, by name."""
     s3_resource = boto3.resource("s3")
     return [bucket.name for bucket in s3_resource.buckets.all()]

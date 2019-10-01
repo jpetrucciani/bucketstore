@@ -122,19 +122,21 @@ Interact with S3 keys:
     # Delete the key.
     >>> foo.delete()
 
-    # Create a key with metadata at the same time.
+    # Create a key with a content type
     >>> foo = bucket.key('foo.html')
     >>> foo.set('<h1>bar</h1>', content_type='text/html')
 
     # upload to key
     >>> bucket.key('test.py').upload('/tmp/test.py')
-    # or with a file-like object! (make sure it's open in binary mode)
+
+    # or upload with a file-like object! (make sure it's open in binary mode)
     >>> with open('/tmp/test.py', 'rb') as file:
     >>>     bucket.key('test.py').upload(file)
 
-    # download to key
+    # download to file
     >>> bucket.key('test.py').download('/tmp/test.py')
-    # or with a file-like object! (make sure it's open in binary mode)
+
+    # or download to a file-like object! (make sure it's open in binary mode)
     >>> with open('/tmp/test.py', 'wb') as file:
     >>>     bucket.key('test.py').download(file)
 
@@ -156,7 +158,7 @@ Tests are run through Tox_.
     # Run tests against all environments.
     $ tox
     # Run against a specific version.
-    $ tox -e py35
+    $ tox -e py36
     # Run with pytest arguments.
     $ tox -- --pdb
 
