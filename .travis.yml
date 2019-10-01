@@ -13,7 +13,8 @@ matrix:
       env: TOXENV=py38
 before_install:
   - sudo rm -f /etc/boto.cfg
-  - touch ~/.aws/credentials
+  - sudo touch ~/.aws/credentials
+  - export BOTO_CONFIG=/dev/null
 install:
   - pip install tox pipenv
   - pipenv install
