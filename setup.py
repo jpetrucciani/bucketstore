@@ -10,7 +10,7 @@ from setuptools import setup
 
 CURRENT_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 
-with codecs.open(os.path.join(CURRENT_DIRECTORY, "README.rst"), encoding="utf-8") as f:
+with codecs.open(os.path.join(CURRENT_DIRECTORY, "README.md"), encoding="utf-8") as f:
     LONG_DESCRIPTION = "\n" + f.read()
 
 
@@ -21,6 +21,7 @@ setup(
     version="0.2.1",
     description="A simple library for interacting with Amazon S3.",
     long_description=LONG_DESCRIPTION,
+    long_description_content_type="text/markdown",
     author="Kenneth Reitz, Jacobi Petrucciani",
     author_email="jacobi@mimirhq.com",
     url="https://github.com/jpetrucciani/bucketstore",
