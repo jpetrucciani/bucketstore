@@ -187,9 +187,9 @@ class S3Bucket:
         """returns a list of keys in the bucket."""
         if prefix:
             if legacy_api:
-                paginator = self._boto_s3.get_paginator('list_objects')
+                paginator = self._boto_s3.meta.client.get_paginator('list_objects')
             else:
-                paginator = self._boto_s3.get_paginator('list_objects_v2')
+                paginator = self._boto_s3.meta.client.get_paginator('list_objects_v2')
                 
             [k.key for k in paginator.paginate(Bucket=self.name, Delimiter="/", Prefix=prefix)['Contents']]
         return [k.key for k in self._boto_bucket.objects.all()]
