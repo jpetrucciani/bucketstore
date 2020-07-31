@@ -186,7 +186,7 @@ class S3Bucket:
     def list(self, prefix: str = None) -> List:
         """returns a list of keys in the bucket."""
         if prefix:
-            [k.key for k in self._boto_bucket.objects.filter(Prefix=prefix)]
+            [k.key for k in self._boto_bucket.objects.filter(Delimiter="/", Prefix=prefix)]
         return [k.key for k in self._boto_bucket.objects.all()]
 
     @property
