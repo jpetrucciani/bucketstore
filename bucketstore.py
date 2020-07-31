@@ -148,7 +148,8 @@ class S3Bucket:
         super(S3Bucket, self).__init__()
         self.name = name
         self.region = region or os.getenv("AWS_DEFAULT_REGION", AWS_DEFAULT_REGION)
-        self.endpoint_url = endpoint_url or os.getenv("AWS_ENDPOINT_URL", None)
+        env_endpoint_url = os.getenv("AWS_ENDPOINT_URL", "")
+        self.endpoint_url = endpoint_url or env_endpoint_url if env_endpoint_url else None
         self._boto_s3 = boto3.resource("s3", self.region, endpoint_url=self.endpoint_url)
         self._boto_bucket = self._boto_s3.Bucket(self.name)
 
@@ -267,7 +268,7 @@ def get(bucket_name: str, create: bool = False) -> S3Bucket:
 
 
 def login(
-    access_key_id: str, secret_access_key: str, region: str = AWS_DEFAULT_REGION, endpoint_url: str = None
+    access_key_id: str, secret_access_key: str, region: str = AWS_DEFAULT_REGION, endpoint_url: str = ""
 ) -> None:
     """sets environment variables for boto3."""
     os.environ["AWS_ACCESS_KEY_ID"] = access_key_id
