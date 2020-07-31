@@ -191,10 +191,11 @@ class S3Bucket:
             else:
                 paginator = self._boto_s3.meta.client.get_paginator('list_objects_v2')
             objects = []
-            for page in paginator.paginate(Bucket=self.name, Delimiter="/", Prefix=prefix):
-                for obj in page['Contents']:
-                    objects += obj.key
+            for page in paginator.paginate(Bucket=self.name, Prefix=prefix):
+                for obj in page.get('Contents', []):
+                    objects.append(obj['Key'])
             return objects
+        
         return [k.key for k in self._boto_bucket.objects.all()]
 
     @property
