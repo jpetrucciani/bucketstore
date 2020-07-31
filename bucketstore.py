@@ -183,10 +183,15 @@ class S3Bucket:
                 return False
             raise  # pragma: no cover
 
-    def list(self, prefix: str = None) -> List:
+    def list(self, prefix: str = None, legacy_api: bool = False) -> List:
         """returns a list of keys in the bucket."""
         if prefix:
-            [k.key for k in self._boto_bucket.objects.filter(Delimiter="/", Prefix=prefix)]
+            if legacy_api:
+                paginator = self._boto_s3.get_paginator('list_objects')
+            else:
+                paginator = self._boto_s3.get_paginator('list_objects_v2')
+                
+            [k.key for k in paginator.paginate(Bucket=self.name, Delimiter="/", Prefix=prefix)['Contents']]
         return [k.key for k in self._boto_bucket.objects.all()]
 
     @property
