@@ -183,8 +183,10 @@ class S3Bucket:
                 return False
             raise  # pragma: no cover
 
-    def list(self) -> List:
+    def list(self, prefix: str = None) -> List:
         """returns a list of keys in the bucket."""
+        if prefix:
+            [k.key for k in self._boto_bucket.objects.filter(Prefix=prefix)]
         return [k.key for k in self._boto_bucket.objects.all()]
 
     @property
