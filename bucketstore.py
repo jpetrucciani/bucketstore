@@ -144,11 +144,23 @@ class S3Key:
 class S3Bucket:
     """An Amazon S3 Bucket."""
 
-    def __init__(self, name: str, create: bool = False, region: str = "") -> None:
+    def __init__(
+        self,
+        name: str,
+        create: bool = False,
+        region: str = "",
+        endpoint_url: str = None,
+    ) -> None:
         super(S3Bucket, self).__init__()
         self.name = name
         self.region = region or os.getenv("AWS_DEFAULT_REGION", AWS_DEFAULT_REGION)
-        self._boto_s3 = boto3.resource("s3", self.region)
+        env_endpoint_url = os.getenv("AWS_ENDPOINT_URL", "")
+        self.endpoint_url = (
+            endpoint_url or env_endpoint_url if env_endpoint_url else None
+        )
+        self._boto_s3 = boto3.resource(
+            "s3", self.region, endpoint_url=self.endpoint_url
+        )
         self._boto_bucket = self._boto_s3.Bucket(self.name)
 
         # Check if the bucket exists.
@@ -182,8 +194,19 @@ class S3Bucket:
                 return False
             raise  # pragma: no cover
 
-    def list(self) -> List:
+    def list(self, prefix: str = None, legacy_api: bool = False) -> List:
         """returns a list of keys in the bucket."""
+        if prefix:
+            if legacy_api:
+                paginator = self._boto_s3.meta.client.get_paginator("list_objects")
+            else:
+                paginator = self._boto_s3.meta.client.get_paginator("list_objects_v2")
+            objects = []
+            for page in paginator.paginate(Bucket=self.name, Prefix=prefix):
+                for obj in page.get("Contents", []):
+                    objects.append(obj["Key"])
+            return objects
+
         return [k.key for k in self._boto_bucket.objects.all()]
 
     @property
@@ -255,9 +278,13 @@ def get(bucket_name: str, create: bool = False) -> S3Bucket:
 
 
 def login(
-    access_key_id: str, secret_access_key: str, region: str = AWS_DEFAULT_REGION
+    access_key_id: str,
+    secret_access_key: str,
+    region: str = AWS_DEFAULT_REGION,
+    endpoint_url: str = "",
 ) -> None:
     """sets environment variables for boto3."""
     os.environ["AWS_ACCESS_KEY_ID"] = access_key_id
     os.environ["AWS_SECRET_ACCESS_KEY"] = secret_access_key
     os.environ["AWS_DEFAULT_REGION"] = region
+    os.environ["AWS_ENDPOINT_URL"] = endpoint_url
