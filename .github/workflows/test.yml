@@ -4,21 +4,41 @@ on: [push, pull_request]
 
 jobs:
   prospector:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: jpetrucciani/prospector-check@master
   mypy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: jpetrucciani/mypy-check@master
         with:
           path: 'bucketstore.py'
   black:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: jpetrucciani/black-check@master
         with:
           path: 'bucketstore.py'
+  tests:
+    runs-on: ubuntu-latest
+    needs: [mypy, prospector, black]
+    strategy:
+      matrix:
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+    name: python ${{ matrix.python-version }} tests
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+      - name: install requirements
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements.dev.txt
+      - name: run Tox
+        run: tox -e py

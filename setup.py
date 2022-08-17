@@ -3,37 +3,42 @@
 """
 pip setup file
 """
-import os
-import codecs
 from setuptools import setup
 
 
-CURRENT_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
+__library__ = "bucketstore"
+__version__ = "VERSION"
 
-with codecs.open(os.path.join(CURRENT_DIRECTORY, "README.md"), encoding="utf-8") as f:
-    LONG_DESCRIPTION = "\n" + f.read()
+__user__ = "https://github.com/jpetrucciani"
+
+
+with open("README.md", encoding="UTF-8") as readme:
+    LONG_DESCRIPTION = readme.read()
 
 
 REQUIRED = ["boto3"]
 
 setup(
-    name="bucketstore",
-    version="0.2.1",
+    name=__library__,
+    version=__version__,
     description="A simple library for interacting with Amazon S3.",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     author="Kenneth Reitz, Jacobi Petrucciani",
-    author_email="jacobi@mimirhq.com",
-    url="https://github.com/jpetrucciani/bucketstore",
-    py_modules=["bucketstore"],
+    author_email="j@cobi.dev",
+    url=f"{__user__}/{__library__}.git",
+    download_url=f"{__user__}/{__library__}.git",
+    py_modules=[__library__],
     install_requires=REQUIRED,
     license="MIT",
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
     ],

@@ -1,12 +1,8 @@
-[![image](https://travis-ci.org/jpetrucciani/bucketstore.svg?branch=master)](https://travis-ci.org/jpetrucciani/bucketstore)
-[![PyPI
-version](https://badge.fury.io/py/bucketstore.svg)](https://badge.fury.io/py/bucketstore)
-[![Code style:
-black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-[![Python 3.5+
-supported](https://img.shields.io/badge/python-3.5+-blue.svg)](https://www.python.org/downloads/release/python-350/)
+[![PyPI version](https://badge.fury.io/py/bucketstore.svg)](https://badge.fury.io/py/bucketstore)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Python 3.6+ supported](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/release/python-360/)
 
-**BucketStore** is a very simple Amazon S3 client, written in Python. It
+**bucketstore** is a very simple Amazon S3 client, written in Python. It
 aims to be much more straight-forward to use than boto3, and specializes
 only in Amazon S3, ignoring the rest of the AWS ecosystem.
 
@@ -24,7 +20,9 @@ only in Amazon S3, ignoring the rest of the AWS ecosystem.
 
 ## Installation
 
-    $ pip install bucketstore
+```bash
+pip install bucketstore
+```
 
 ## Get (or create) a bucket, easily:
 
@@ -132,7 +130,7 @@ Tests are run through [Tox](https://tox.readthedocs.io/en/latest/).
 # Run tests against all environments.
 $ tox
 # Run against a specific version.
-$ tox -e py36
+$ tox -e py310
 # Run with pytest arguments.
 $ tox -- --pdb
 ```

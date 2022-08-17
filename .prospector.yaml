@@ -32,7 +32,7 @@ mccabe:
   options:
     max-complexity: 22
 
-pep8:
+pycodestyle:
   disable:
     - N802
     - N807
@@ -50,7 +50,7 @@ pyroma:
     - PYR19
     - PYR16
 
-pep257:
+pydocstyle:
   disable:
     - D000
     - D100
