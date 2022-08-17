@@ -10,6 +10,7 @@ from typing import BinaryIO, Callable, List, Union
 
 
 AWS_DEFAULT_REGION = "us-east-1"
+__version__ = "VERSION"
 
 
 class S3Key:
@@ -17,13 +18,13 @@ class S3Key:
 
     def __init__(self, bucket: "S3Bucket", name: str) -> None:
         """constructor"""
-        super(S3Key, self).__init__()
+        super().__init__()
         self.bucket = bucket
         self.name = name
 
     def __repr__(self) -> str:
         """str representation of an s3key"""
-        return "<S3Key name={0!r} bucket={1!r}>".format(self.name, self.bucket.name)
+        return f"<S3Key name={self.name} bucket={self.bucket.name}>"
 
     def __len__(self) -> int:
         """returns the size of the s3 object of this key in bytes"""
@@ -80,14 +81,16 @@ class S3Key:
         """renames the key to a given new name"""
         # copy the item to avoid pulling and pushing
         self.bucket._boto_s3.Object(self.bucket.name, new_name).copy_from(
-            CopySource="{}/{}".format(self.bucket.name, self.name)
+            CopySource=f"{self.bucket.name}/{self.name}"
         )
         # Delete the current key.
         self.delete()
         # Set the new name.
         self.name = new_name
 
-    def delete(self,) -> dict:
+    def delete(
+        self,
+    ) -> dict:
         """Deletes the key."""
         return self._boto_object.delete()
 
@@ -121,15 +124,12 @@ class S3Key:
     def url(self) -> str:
         """returns the public URL for the given key."""
         if self.is_public:
-            return "{0}/{1}/{2}".format(
-                self.bucket._boto_s3.meta.client.meta.endpoint_url,
-                self.bucket.name,
-                self.name,
-            )
+            endpoint = self.bucket._boto_s3.meta.client.meta.endpoint_url
+            return f"{endpoint}/{self.bucket.name}/{self.name}"
         raise ValueError(
-            "{0!r} does not have the public-read ACL set. "
+            f"{self.name} does not have the public-read ACL set. "
             "Use the make_public() method to allow for "
-            "public URL sharing.".format(self.name)
+            "public URL sharing."
         )
 
     def temp_url(self, duration: int = 120) -> str:
@@ -151,7 +151,7 @@ class S3Bucket:
         region: str = "",
         endpoint_url: str = None,
     ) -> None:
-        super(S3Bucket, self).__init__()
+        super().__init__()
         self.name = name
         self.region = region or os.getenv("AWS_DEFAULT_REGION", AWS_DEFAULT_REGION)
         env_endpoint_url = os.getenv("AWS_ENDPOINT_URL", "")
@@ -169,7 +169,7 @@ class S3Bucket:
                 # Create the bucket.
                 self._boto_s3.create_bucket(Bucket=self.name)
             else:
-                raise ValueError("The bucket {0!r} doesn't exist!".format(self.name))
+                raise ValueError(f"The bucket {self.name} doesn't exist!")
 
     def __getitem__(self, key: str) -> str:
         """allows for accessing keys with the array syntax"""
@@ -263,7 +263,7 @@ class S3Bucket:
 
     def __repr__(self) -> str:
         """representation of an s3bucket object"""
-        return "<S3Bucket name={0!r}>".format(self.name)
+        return f"<S3Bucket name={self.name}>"
 
 
 def list() -> List[str]:  # pylint: disable=redefined-builtin
