@@ -4,7 +4,7 @@ bucketstore pytest configuration
 import bucketstore
 import os
 import pytest
-from moto import mock_s3
+from moto import mock_aws
 from typing import Generator
 
 
@@ -24,7 +24,7 @@ def login() -> Generator:
 @pytest.fixture
 def bucket() -> Generator:
     """fixture that provides a bucketstore bucket."""
-    with mock_s3():
+    with mock_aws():
         yield bucketstore.get("bucketstore-playground", create=True)
 
 
