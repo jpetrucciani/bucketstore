@@ -1,6 +1,7 @@
 """
 bucketstore module
 """
+
 import io
 import os
 import os.path
@@ -31,7 +32,7 @@ class S3Key:
         return self.size()
 
     @property
-    def _boto_object(self):  # type: ignore
+    def _boto_object(self):  # noqa: ANN202
         """the underlying boto3 s3 key object"""
         return self.bucket._boto_s3.Object(self.bucket.name, self.name)
 
@@ -98,9 +99,11 @@ class S3Key:
     def is_public(self) -> bool:
         """returns True if the public-read ACL is set for the Key."""
         for grant in self._boto_object.Acl().grants:
-            if "AllUsers" in grant["Grantee"].get("URI", ""):
-                if grant["Permission"] == "READ":
-                    return True
+            if (
+                "AllUsers" in grant["Grantee"].get("URI", "")
+                and grant["Permission"] == "READ"
+            ):
+                return True
 
         return False
 
@@ -164,7 +167,7 @@ class S3Bucket:
         self._boto_bucket = self._boto_s3.Bucket(self.name)
 
         # Check if the bucket exists.
-        if not self._boto_s3.Bucket(self.name) in self._boto_s3.buckets.all():
+        if self._boto_s3.Bucket(self.name) not in self._boto_s3.buckets.all():
             if create:
                 # Create the bucket.
                 self._boto_s3.create_bucket(Bucket=self.name)
@@ -213,9 +216,11 @@ class S3Bucket:
     def is_public(self) -> bool:
         """returns True if the public-read ACL is set for the bucket."""
         for grant in self._boto_bucket.Acl().grants:
-            if "AllUsers" in grant["Grantee"].get("URI", ""):
-                if grant["Permission"] == "READ":
-                    return True
+            if (
+                "AllUsers" in grant["Grantee"].get("URI", "")
+                and grant["Permission"] == "READ"
+            ):
+                return True
 
         return False
 

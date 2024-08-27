@@ -1,24 +1,22 @@
-{ jacobi ? import
-    (
-      fetchTarball {
-        name = "jpetrucciani-2022-08-17";
-        url = "https://github.com/jpetrucciani/nix/archive/9e8f5c0b0f7f69257f7ff1c2032cbadbc3da7d25.tar.gz";
-        sha256 = "1vyjwlhbqxfmm4xpvwyzvdl8k5jd5wg83avxlwpjkfh8yndm0bny";
-      }
-    )
+{ pkgs ? import
+    (fetchTarball {
+      name = "jpetrucciani-2024-08-27";
+      url = "https://github.com/jpetrucciani/nix/archive/20a58e6a4fccb574caef9b764585609b8d4fbd7d.tar.gz";
+      sha256 = "0ksjkhcrd0h5zb8a5x6mbpn491gjs0n7rq9mxxvx9k3mnfjfaq5y";
+    })
     { }
 }:
 let
-  inherit (jacobi.hax) ifIsLinux ifIsDarwin;
+  inherit (pkgs.hax) ifIsLinux ifIsDarwin;
 
   name = "bucketstore";
-  tools = with jacobi; {
+  tools = with pkgs; {
     cli = [
       jq
       nixpkgs-fmt
     ];
     python = [
-      (python310.withPackages (p: with p; [
+      (python311.withPackages (p: with p; [
         boto3
 
         # dev
@@ -29,9 +27,9 @@ let
       ]))
     ];
   };
-
-  env = jacobi.enviro {
-    inherit name tools;
+  paths = pkgs.lib.flatten [ (builtins.attrValues tools) ];
+  env = pkgs.buildEnv {
+    inherit name paths; buildInputs = paths;
   };
 in
 env

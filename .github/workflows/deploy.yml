@@ -8,19 +8,16 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: set up python
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v4.1.7
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: install dependencies
-        run: |
+      - run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel twine
           sed -i -E "s#VERSION#${GITHUB_REF/refs\/tags\//}#g" ./setup.py
           sed -i -E "s#VERSION#${GITHUB_REF/refs\/tags\//}#g" ./bucketstore.py
-      - name: build and publish
-        env:
+      - env:
           TWINE_USERNAME: ${{ secrets.PYPI_USER }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |

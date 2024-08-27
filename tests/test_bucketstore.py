@@ -1,6 +1,7 @@
 """
 pytest the bucketstore functionality
 """
+
 import bucketstore
 import json
 import os
@@ -16,7 +17,7 @@ def dbg(text: str) -> None:
         text = json.dumps(text, sort_keys=True, indent=2)
     caller = sys._getframe(1)
     print("")
-    print("----- {} line {} ------".format(caller.f_code.co_name, caller.f_lineno))
+    print(f"----- {caller.f_code.co_name} line {caller.f_lineno} ------")
     print(text)
     print("-----")
     print("")
@@ -211,7 +212,7 @@ def test_key_download(bucket: bucketstore.S3Bucket, key: bucketstore.S3Key) -> N
     # test downloading to a file
     _, path = tempfile.mkstemp()
     key.download(path)
-    with open(path, "r") as file_0:
+    with open(path) as file_0:
         data = file_0.read()
         assert isinstance(data, str)
         assert "a testing value" in data
@@ -221,7 +222,7 @@ def test_key_download(bucket: bucketstore.S3Bucket, key: bucketstore.S3Key) -> N
     _, path = tempfile.mkstemp()
     with open(path, "wb") as file_1:
         key.download(file_1)
-    with open(path, "r") as file_2:
+    with open(path) as file_2:
         data = file_2.read()
         assert isinstance(data, str)
         assert "a testing value" in data

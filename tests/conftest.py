@@ -1,6 +1,7 @@
 """
 bucketstore pytest configuration
 """
+
 import bucketstore
 import os
 import pytest
@@ -15,10 +16,10 @@ os.environ["AWS_SESSION_TOKEN"] = "testing"
 
 
 @pytest.fixture(autouse=True)
-def login() -> Generator:
+def login() -> Generator:  # noqa: PT004
     """fixture that will automatically set the login variables."""
     bucketstore.login("access_key", "secret_key")
-    yield
+    return
 
 
 @pytest.fixture
