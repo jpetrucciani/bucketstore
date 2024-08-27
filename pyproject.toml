@@ -1,3 +1,46 @@
+[tool.poetry]
+name = "bucketstore"
+version = "0.3.0"
+description = "A simple library for interacting with Amazon S3."
+readme = "README.md"
+authors = ["jacobi petrucciani <j@cobi.dev>"]
+packages = [{ include = "bucketstore.py" }]
+homepage = "https://github.com/jpetrucciani/bucketstore"
+repository = "https://github.com/jpetrucciani/bucketstore"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "License :: OSI Approved :: MIT License",
+]
+
+
+[tool.poetry.dependencies]
+python = ">= 3.7"
+boto3 = ">= 1.20.0"
+
+[tool.poetry.dev-dependencies]
+moto = ">= 5.0.0"
+ptpython = ">= 3.0.26"
+pytest = "^7.4.3"
+pytest-cov = "^4.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
 [tool.ruff]
 line-length = 100
 lint.select = [

@@ -1,4 +1,0 @@
-moto
-pytest
-pytest-cov
-tox

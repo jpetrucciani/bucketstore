@@ -31,11 +31,11 @@ jobs:
     name: python ${{ matrix.python-version }} tests
     steps:
       - uses: actions/checkout@v4.1.7
+      - run: pipx install poetry
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
-      - run: |
-          pip install -r requirements.txt
-          pip install -r requirements.dev.txt
-      - run: tox -e py
+          cache: 'poetry'
+      - run: poetry install
+      - run: poetry run pytest ./tests -s --cov . --cov-report html --cov-report term --cov-report xml:coverage.xml --junitxml=report.xml

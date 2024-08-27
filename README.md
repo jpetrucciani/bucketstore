@@ -1,6 +1,6 @@
 [![PyPI version](https://badge.fury.io/py/bucketstore.svg)](https://badge.fury.io/py/bucketstore)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-[![Python 3.6+ supported](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Python 3.7+ supported](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/release/python-370/)
 
 **bucketstore** is a very simple Amazon S3 client, written in Python. It
 aims to be much more straight-forward to use than boto3, and specializes
@@ -66,7 +66,7 @@ True
 {}
 ```
 
-## Interact with S3 keys:
+## Interact with S3 keys
 
 ```pycon
 >>> bucket.key('foo')
@@ -127,12 +127,7 @@ Other methods include `bucketstore.login(access_key_id, secret_access_key)`, `bu
 Tests are run through [Tox](https://tox.readthedocs.io/en/latest/).
 
 ```shell
-# Run tests against all environments.
-$ tox
-# Run against a specific version.
-$ tox -e py310
-# Run with pytest arguments.
-$ tox -- --pdb
+
 ```
 
 ✨🍰✨

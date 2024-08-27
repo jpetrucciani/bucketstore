@@ -16,6 +16,8 @@ let
       nixpkgs-fmt
     ];
     python = [
+      poetry
+      ruff
       (python311.withPackages (p: with p; [
         boto3
 
