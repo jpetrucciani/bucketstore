@@ -7,7 +7,7 @@ import os
 import pytest
 import sys
 import tempfile
-from moto import mock_s3
+from moto import mock_aws
 
 
 def dbg(text: str) -> None:
@@ -33,7 +33,7 @@ def test_login() -> None:
     assert os.environ["AWS_DEFAULT_REGION"] == "us-east-1"
 
 
-@mock_s3
+@mock_aws
 def test_buckets_can_be_created() -> None:
     bucket = bucketstore.get("test-bucket", create=True)
 
@@ -43,7 +43,7 @@ def test_buckets_can_be_created() -> None:
     assert "<S3Bucket" in repr(bucket)
 
 
-@mock_s3
+@mock_aws
 def test_buckets_are_not_created_automatically() -> None:
     with pytest.raises(ValueError):
         bucketstore.get("non-existent-bucket")
