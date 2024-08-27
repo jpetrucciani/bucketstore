@@ -74,9 +74,7 @@ class S3Key:
         """Sets the key to the given value."""
         if not metadata:
             metadata = {}
-        return self._boto_object.put(
-            Body=value, Metadata=metadata, ContentType=content_type
-        )
+        return self._boto_object.put(Body=value, Metadata=metadata, ContentType=content_type)
 
     def rename(self, new_name: str) -> None:
         """renames the key to a given new name"""
@@ -99,10 +97,7 @@ class S3Key:
     def is_public(self) -> bool:
         """returns True if the public-read ACL is set for the Key."""
         for grant in self._boto_object.Acl().grants:
-            if (
-                "AllUsers" in grant["Grantee"].get("URI", "")
-                and grant["Permission"] == "READ"
-            ):
+            if "AllUsers" in grant["Grantee"].get("URI", "") and grant["Permission"] == "READ":
                 return True
 
         return False
@@ -158,12 +153,8 @@ class S3Bucket:
         self.name = name
         self.region = region or os.getenv("AWS_DEFAULT_REGION", AWS_DEFAULT_REGION)
         env_endpoint_url = os.getenv("AWS_ENDPOINT_URL", "")
-        self.endpoint_url = (
-            endpoint_url or env_endpoint_url if env_endpoint_url else None
-        )
-        self._boto_s3 = boto3.resource(
-            "s3", self.region, endpoint_url=self.endpoint_url
-        )
+        self.endpoint_url = endpoint_url or env_endpoint_url if env_endpoint_url else None
+        self._boto_s3 = boto3.resource("s3", self.region, endpoint_url=self.endpoint_url)
         self._boto_bucket = self._boto_s3.Bucket(self.name)
 
         # Check if the bucket exists.
@@ -216,10 +207,7 @@ class S3Bucket:
     def is_public(self) -> bool:
         """returns True if the public-read ACL is set for the bucket."""
         for grant in self._boto_bucket.Acl().grants:
-            if (
-                "AllUsers" in grant["Grantee"].get("URI", "")
-                and grant["Permission"] == "READ"
-            ):
+            if "AllUsers" in grant["Grantee"].get("URI", "") and grant["Permission"] == "READ":
                 return True
 
         return False
@@ -241,9 +229,7 @@ class S3Bucket:
         selected_key = self.key(key)
         return selected_key.get()
 
-    def set(
-        self, key: str, value: str, metadata: dict = None, content_type: str = ""
-    ) -> dict:
+    def set(self, key: str, value: str, metadata: dict = None, content_type: str = "") -> dict:
         """creates/edits a key in the s3 bucket"""
         if not metadata:
             metadata = {}
